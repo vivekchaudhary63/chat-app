@@ -1,4 +1,5 @@
 import { Formik } from 'formik';
+import Swal from 'sweetalert2';
 import app_config from '../config';
 
 const Register = () => {
@@ -23,7 +24,16 @@ const Register = () => {
 
         fetch(url + '/user/add', reqOptions)
             .then((res) => { res.json() })
-            .then((data) => { console.log(data) });
+            .then((data) => { console.log(data)
+            Swal.fire({
+                icon : 'success',
+                title: 'Successfully Registered'
+            }).then(() => {
+                window.location.replace('/login');
+            }) });
+
+            
+
 
     }
 

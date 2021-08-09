@@ -12,13 +12,29 @@ const cors = require('cors');
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, { cors: { origin: 'http://localhost:3000' } });
 
+const teams = [];
+
 io.on('connection', (socket) => {
     console.log('client connected');
+    // socket.broadcast.emit('newteam', teams);
 
     socket.on('send', (data) => {
         console.log(data);
 
-        socket.broadcast.emit('rec', data);
+        socket.to(data.team).emit('rec', data);
+        console.log('team message in : '+data.team)
+    })
+
+    socket.on('createteam', (data) => {
+        socket.join(data.team);
+        console.log('client created '+data.team);
+        teams.push(data.team);
+        socket.broadcast.emit('newteam', teams);
+    })
+
+    socket.on('jointeam', (team) => {
+        socket.join(team);
+        console.log('client joined '+team);
     })
 })
 

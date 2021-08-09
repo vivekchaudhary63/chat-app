@@ -19,9 +19,9 @@ const Header = () => {
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="nav-link text-white">
-                                    Dashboard
-                                </a>
+                                <Link to="/chat" class="nav-link text-white">
+                                    Chat
+                                </Link>
                             </li>
                             <li>
                                 <a href="#" class="nav-link text-white">

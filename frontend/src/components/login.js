@@ -21,10 +21,13 @@ const Login = () => {
                 if (data) {
                     if (data.password == password) {
                         console.log('login success');
+                        sessionStorage.setItem('user', JSON.stringify(data));
 
                         Swal.fire({
                             icon: 'success',
                             title: 'Login Success'
+                        }).then(() => {
+                            window.location.replace('/chat');
                         })
 
                     } else {
