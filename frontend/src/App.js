@@ -11,9 +11,9 @@ function App() {
       <Router>
         <Header />
         <Route component={Register} path={'/register'} />
+
         <Route component={Login} path={'/login'} />
         <Route component={Chat} path={'/chat'} />
-        <Footer />
       </Router>
     </div>
   );

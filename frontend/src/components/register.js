@@ -1,6 +1,7 @@
 import { Formik } from 'formik';
 import Swal from 'sweetalert2';
 import app_config from '../config';
+import img from '../images/chat_main.png';
 
 const Register = () => {
 
@@ -24,15 +25,17 @@ const Register = () => {
 
         fetch(url + '/user/add', reqOptions)
             .then((res) => { res.json() })
-            .then((data) => { console.log(data)
-            Swal.fire({
-                icon : 'success',
-                title: 'Successfully Registered'
-            }).then(() => {
-                window.location.replace('/login');
-            }) });
+            .then((data) => {
+                console.log(data)
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Successfully Registered'
+                }).then(() => {
+                    window.location.replace('/login');
+                })
+            });
 
-            
+
 
 
     }
@@ -41,7 +44,9 @@ const Register = () => {
     return (
         <div className="col-md-10">
             <div class="row" style={{ marginTop: '10rem' }}>
-                <div className="col-md-6"></div>
+                <div className="col-md-6">
+                    <img src={img} className="img-fluid" />
+                </div>
                 <div className="col-md-6">
 
                     <Formik initialValues={registerForm} onSubmit={submitForm}>

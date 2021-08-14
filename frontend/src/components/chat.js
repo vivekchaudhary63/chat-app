@@ -10,97 +10,102 @@ import ManageTeam from './manageTeam';
 const Chat = () => {
 
     const url = app_config.api_url;
-    const socket = io({autoConnect : false});
+    const [socket, setSocket] = useState(io(url, { autoConnect: false }));
     const [message, setMessage] = useState("");
     const [messageList, setMessageList] = useState([
-        {user : 'example user', message : "example message", type: 'incoming'},
-        {user : 'example user 2', message : "example message 2", type: 'outgoing'},
+        { user: 'example user', message: "example message", type: 'incoming' },
+        { user: 'example user 2', message: "example message 2", type: 'outgoing' },
     ]);
     const [teamList, setTeamList] = useState([]);
     const [currentTeam, setCurrentTeam] = useState("");
-    const currentUser = JSON.parse(sessionStorage.getItem('user'));
+    const [currentUser, setCurrentUser] = useState(JSON.parse(sessionStorage.getItem('user')))
 
-// Recieve messages 
-socket.on('message', (data) => {
-    let msgObj = {user : data['user'], message : data.message, type: 'incoming'} 
-    setMessageList([...messageList, msgObj]);
-    scrollToBottom()
-})
+    const connectToServer = () => {
+        socket.connect();
+        console.log("requested");
+    };
 
-function scrollToBottom() {
-    let messageArea = document.getElementById('msg_area');
-    messageArea.scrollTop = messageArea.scrollHeight
-}
+    // Recieve messages 
+    socket.on('message', (data) => {
+        let msgObj = { user: data['user'], message: data.message, type: 'incoming' }
+        setMessageList([...messageList, msgObj]);
+        scrollToBottom()
+    })
+
+    function scrollToBottom() {
+        let messageArea = document.getElementById('msg_area');
+        messageArea.scrollTop = messageArea.scrollHeight
+    }
 
     useEffect(() => {
 
-        socket.connect(url);
+        connectToServer();
 
-        console.log(messageList);
+        console.log(currentUser);
         socket.on('rec', (data) => {
             console.log(data);
             setMessageList([...messageList, data]);
-
         })
 
         socket.on('newteam', (data) => {
-            console.log(data);
+            console.log('dsd');
             setTeamList(data);
         })
     }, [])
 
     const sendMessage = () => {
-        let msgObj = {user : currentUser.fullname, message : message, type: 'outgoing'} 
-        console.log('gghhg')
+        let msgObj = { user: currentUser.fullname, message: message, type: 'outgoing' }
+        console.log(currentUser);
 
-        socket.emit('send', {text : message, team : currentTeam, user: currentUser.fullname});
+        socket.emit('send', { message: message, team: currentTeam, user: currentUser.fullname });
         setMessageList([...messageList, msgObj]);
+        console.log([...messageList, msgObj]);
         setMessage("");
-        scrollToBottom()
+        scrollToBottom();
 
     }
 
     return (
-        <div className="col-md-10 mx-auto">
+        <div className="col-md-11 mx-auto">
             <h1 className="text-center">Chat Component</h1>
             <div className="row">
                 <div className="col-2">
-            <ManageTeam socket={socket} setCurrentTeam={setCurrentTeam} teamList={teamList} team={currentTeam}></ManageTeam>
+                    <ManageTeam socket={socket} setCurrentTeam={setCurrentTeam} teamList={teamList} team={currentTeam}></ManageTeam>
 
                 </div>
                 <div className="col-10">
-                <Card>
-                <CardContent className="card-body">
+                    <div>
+                        <div className="card-body">
 
-                    <section className="chat__section">
-                    <div class="brand">
-                        <h1>mssg</h1>
-                    </div>
-                    <div className="message__area" id="msg_area">
-                        
-                        {
-                            messageList.map((msg, index) => {
-                                return <div key={index} className={clsx('message', msg.type)}>
-                                    <h4>{msg.user}</h4>
-                                    <p>{msg.message}</p>
+                            <section className="chat__section">
+                                <div class="brand">
+                                    <h1>mssg</h1>
                                 </div>
-                            })
-                        }
+                                <div className="message__area" id="msg_area">
 
-                    </div>
-                    <div className="input-group">
-                        <input className="form-control" value={message} onChange={e => setMessage(e.target.value)} />
-                        <div className="input-group-append">
-                            <button className="btn btn-primary" onClick={sendMessage}>Send</button>
+                                    {
+                                        messageList.map((msg, index) => {
+                                            return <div key={index} className={clsx('message', msg.type)}>
+                                                <h4>{msg.user}</h4>
+                                                <p>{msg.message}</p>
+                                            </div>
+                                        })
+                                    }
+
+                                </div>
+                                <div className="input-group">
+                                    <input className="form-control" value={message} onChange={e => setMessage(e.target.value)} />
+                                    <div className="input-group-append">
+                                        <button className="btn btn-primary" onClick={sendMessage}>Send</button>
+                                    </div>
+                                </div>
+                            </section>
                         </div>
                     </div>
-                </section>
-                </CardContent>
-            </Card>
 
                 </div>
             </div>
-                    </div>
+        </div>
     )
 }
 

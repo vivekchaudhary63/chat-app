@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Swal from 'sweetalert2';
 import app_config from '../config';
 
+
 const Login = () => {
 
     const [email, setEmail] = useState("");
@@ -52,18 +53,20 @@ const Login = () => {
     }
 
     return (
-        <div className="my-card">
-            <h3 className="title">Login Here</h3>
-            <hr />
+        <div className="col-md-3 mx-auto">
+            <div className="my-card mt-5">
+                <h3 className="title">Login Here</h3>
+                <hr />
 
-            <label htmlFor="">Email</label>
-            <input className="form-control" autoFocus type="text" onChange={(e) => { setEmail(e.target.value) }} />
+                <label htmlFor="">Email</label>
+                <input className="form-control" autoFocus type="text" onChange={(e) => { setEmail(e.target.value) }} />
 
-            <label htmlFor="">Password</label>
-            <input className="form-control" type="password" onChange={(e) => { setPassword(e.target.value) }} />
+                <label htmlFor="">Password</label>
+                <input className="form-control" type="password" onChange={(e) => { setPassword(e.target.value) }} />
 
-            <button className="btn btn-outline-success mt-5" onClick={submitForm}>Login</button>
+                <button className="btn btn-outline-success mt-5" onClick={submitForm}>Login</button>
 
+            </div>
 
         </div>
     )
