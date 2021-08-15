@@ -37,6 +37,7 @@ io.on('connection', (socket) => {
         console.log('client joined ' + team);
 
     })
+
 })
 
 

@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { io } from 'socket.io-client';
+import socketClient from 'socket.io-client';
 import app_config from '../config';
 import './chat.css';
 import ManageTeam from './manageTeam';
@@ -10,15 +11,12 @@ import ManageTeam from './manageTeam';
 const Chat = () => {
 
     const url = app_config.api_url;
-    const [socket, setSocket] = useState(io(url, { autoConnect: false }));
+    const [socket, setSocket] = useState(socketClient(url, { autoConnect: false }));
     const [message, setMessage] = useState("");
-    const [messageList, setMessageList] = useState([
-        { user: 'example user', message: "example message", type: 'incoming' },
-        { user: 'example user 2', message: "example message 2", type: 'outgoing' },
-    ]);
+    const [messageList, setMessageList] = useState([]);
     const [teamList, setTeamList] = useState([]);
     const [currentTeam, setCurrentTeam] = useState("");
-    const [currentUser, setCurrentUser] = useState(JSON.parse(sessionStorage.getItem('user')))
+    const [currentUser, setCurrentUser] = useState(JSON.parse(sessionStorage.getItem('user')));
 
     const connectToServer = () => {
         socket.connect();
@@ -40,11 +38,17 @@ const Chat = () => {
     useEffect(() => {
 
         connectToServer();
+        socket.on('connection', () => {
+            console.log(`I'm connected with the back-end`);
+        });
 
         console.log(currentUser);
         socket.on('rec', (data) => {
+            const msgs = messageList;
+            msgs.push(data);
+            console.log(msgs);
             console.log(data);
-            setMessageList([...messageList, data]);
+            setMessageList(msgs);
         })
 
         socket.on('newteam', (data) => {

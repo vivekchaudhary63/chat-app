@@ -17,6 +17,10 @@ const ManageTeam = (props) => {
         console.log('joined team : ' + team)
     }
 
+    const getTeam = () => {
+        props.socket.on('')
+    }
+
 
     return (
         <div>
